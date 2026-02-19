@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 
 const text = ref('');
 const results = ref(null);
+const rows = ref([]);
 
 const analyze = async () => {
   if (!text.value) return;
@@ -15,6 +16,7 @@ const analyze = async () => {
     });
     const data = await response.json();
     results.value = data.predictions;
+    rows.value = data.rows;
   } catch (e) {
     alert('Ошибка соединения с сервером');
   }
@@ -59,11 +61,32 @@ const verdict = computed(() => {
       <div class="classes">
         <div v-for="(prob, label) in results" :key="label" class="class-item">
           <span>{{ translate(label) }}:</span>
-          <strong>{{ (prob * 100).toFixed(1) }}%</strong>
+          <strong>{{ (prob * 100).toFixed(2) }}%</strong>
         </div>
       </div>
     </div>
   </div>
+  <div class="comments-section">
+      <h3>Комментарии ({{ Object.keys(rows).length }})</h3>
+      <div v-if="Object.keys(rows).length" class="comments-list">
+        <div v-for="(item, id) in rows" :key="id" class="comment-card">
+          <div class="comment-header">
+            <span class="comment-id">№ {{ id }}</span>
+          </div>
+          <p class="comment-text">{{ item.comment }}</p>
+
+          <div class="prediction-box">
+            <div v-for="(prob, label) in item.prediction" :key="label" class="prediction-item">
+              <span>{{ translate(label) }}:</span>
+              <div class="progress-bar">
+                <div class="progress-fill" :style="{ width: (prob * 100) + '%' }"></div>
+              </div>
+              <span class="prediction-value">{{ (prob * 100).toFixed(2) }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </template>
 
 
@@ -92,14 +115,15 @@ body {
 }
 
 .main-container {
+  min-width: 70vw;
   background: #fff;
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-  margin-bottom: 10px;
+.main-container h2 {
+  margin: 0 0 10px 0;
   font-size: 20px;
   font-weight: 600;
   text-align: center;
@@ -166,6 +190,8 @@ button:hover {
 .class-item {
   display: flex;
   justify-content: space-between;
+  justify-self: center;
+  width: 15%;
   margin-bottom: 10px;
   font-size: 14px;
   color: #4a5568;
@@ -173,5 +199,95 @@ button:hover {
 
 .class-item strong {
   color: #1a202c;
+}
+
+.comments-section {
+  margin-top: 30px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 20px;
+}
+
+.comments-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.comment-card {
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #edf2f7;
+}
+
+.comment-header {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+  font-size: 13px;
+  color: #718096;
+}
+
+.comment-id {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.comment-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1a202c;
+}
+
+.prediction-box {
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.prediction-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.prediction-item span:first-child {
+  width: 100px;
+  color: #4a5568;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #1a202c;
+}
+
+.prediction-value {
+  min-width: 50px;
+  text-align: right;
+  font-weight: 600;
+  color: #2d3748;
 }
 </style>
