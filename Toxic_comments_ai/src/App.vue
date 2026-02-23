@@ -65,8 +65,7 @@ const verdict = computed(() => {
         </div>
       </div>
     </div>
-  </div>
-  <div class="comments-section">
+    <div class="comments-section">
       <h3>Комментарии ({{ Object.keys(rows).length }})</h3>
       <div v-if="Object.keys(rows).length" class="comments-list">
         <div v-for="(item, id) in rows" :key="id" class="comment-card">
@@ -87,6 +86,7 @@ const verdict = computed(() => {
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 
@@ -117,7 +117,7 @@ body {
 .main-container {
   min-width: 70vw;
   background: #fff;
-  padding: 30px;
+  padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -132,7 +132,7 @@ body {
 textarea {
   width: 100%;
   height: 90px;
-  padding: 12px;
+  padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
@@ -149,7 +149,7 @@ textarea:focus {
 
 button {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   background: #1a202c;
   color: #fff;
   border: none;
@@ -164,14 +164,18 @@ button:hover {
   background: #2d3748;
 }
 
+button:active {
+  background: #404b5f;
+}
+
 .results-box {
-  margin-block: 20px;
+  margin-block: 10px;
 }
 
 .verdict {
   font-weight: bold;
   text-align: center;
-  padding: 12px;
+  padding: 10px;
   margin-bottom: 10px;
   border-radius: 10px;
   font-size: 14px;
@@ -218,7 +222,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 300px;
+  max-height: 200px;
   overflow-y: auto;
   padding-right: 5px;
 }

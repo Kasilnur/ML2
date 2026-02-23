@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import tensorflow as tf
 import pickle
-import numpy as np
 from pymorphy3 import MorphAnalyzer
 from nltk.corpus import stopwords
 from keras.preprocessing.sequence import pad_sequences
@@ -14,7 +13,6 @@ morph = MorphAnalyzer()
 my_stop_words = ["такой", "это", "всё", "весь"]
 stop_words = set(stopwords.words('russian'))
 stop_words.update(my_stop_words)
-
 
 def full_preprocess(text):
     # Токенизация
@@ -39,6 +37,7 @@ app.add_middleware(
 )
 
 model = tf.keras.models.load_model('..\\public\\models\\lstm_model.h5')
+print("Модель загружена")
 with open('..\\public\\models\\tokenizer.pickle', 'rb') as f:
     tokenizer = pickle.load(f)
 
@@ -66,7 +65,7 @@ async def predict(request: TextRequest):
     conn = mysql.connector.connect(
         host="localhost",
         user="root",
-        password="1234",
+        password="57321",
         database="toxic_comments"
     )
 
